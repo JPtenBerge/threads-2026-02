@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.ComponentModel;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,7 +24,41 @@ public partial class MainWindow : Window
 
 	private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
 	{
-		Thread.Sleep(7000);
+		var syncContext = SynchronizationContext.Current!;
+
+		var t = new Thread(() =>
+		{
+			syncContext.Post(new SendOrPostCallback(state => { lblTekst.Content = "werkt ook!"; }), null);
+
+			// lblTekst.Dispatcher.Invoke(() => lblTekst.Content = "werkt!");
+		});
+		t.Start();
+		Thread.Sleep(2000);
 		// Interlocked.
+	}
+
+	private void ButtonWorker_OnClick(object sender, RoutedEventArgs e)
+	{
+		var worker = new BackgroundWorker();
+
+		worker.RunWorkerCompleted += (o, args) => lblVoortgang.Content = "Klaar!";
+		worker.ProgressChanged += (o, args) => lblVoortgang.Content = $"Nu op {args.ProgressPercentage}%";
+		worker.DoWork += (o, args) =>
+		{
+			worker.ReportProgress(10);
+			Thread.Sleep(1000);
+			worker.ReportProgress(40);
+			Thread.Sleep(500);
+			worker.ReportProgress(30);
+			Thread.Sleep(2000);
+			worker.ReportProgress(70);
+			Thread.Sleep(1000);
+			worker.ReportProgress(90);
+			Thread.Sleep(1000);
+			worker.ReportProgress(100);
+			args.Result = 42;
+		};
+		worker.WorkerReportsProgress = true;
+		worker.RunWorkerAsync();
 	}
 }

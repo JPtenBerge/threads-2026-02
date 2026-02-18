@@ -60,5 +60,18 @@ public partial class MainWindow : Window
 		};
 		worker.WorkerReportsProgress = true;
 		worker.RunWorkerAsync();
+		
+		// Bla().Result
+		// Bla().GetAwaiter().GetResult();
+		// Bla().ContinueWith(result =>
+		// {
+		// 	result
+		// })
 	}
+
+	private async Task<int> Bla()
+	{
+		return 4;
+	}
+
 }

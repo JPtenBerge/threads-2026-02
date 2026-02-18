@@ -5,4 +5,9 @@ using TaskDemo;
 Console.WriteLine("Hello, World!");
 
 // Parallellelelellel.Doe();
-Plinq.Doe();
+// Plinq.Doe();
+
+// CoordinationDataStructures.Doe();
+Barriertje.Doe();
+
+Console.ReadKey();
